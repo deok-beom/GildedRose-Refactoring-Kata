@@ -3,6 +3,7 @@ package com.gildedrose;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.gildedrose.enumerate.ItemType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GildedRoseTest {
@@ -49,7 +50,7 @@ class GildedRoseTest {
         // Given
         int sellIn = 2;
         int quality = 45;
-        Item[] items = new Item[]{new Item("Aged Brie", sellIn, quality)};
+        Item[] items = new Item[]{new Item(AGED_BRIE.getName(), sellIn, quality)};
         GildedRose app = new GildedRose(items);
 
         // When sellIn > 0 Then
@@ -88,9 +89,9 @@ class GildedRoseTest {
         int negativeSellIn = -1;
         int quality = 45;
 
-        Item sulfurasHasPositiveSellIn = new Item("Sulfuras, Hand of Ragnaros", positiveSellIn, quality);
-        Item sulfurasHasZeroSellIn = new Item("Sulfuras, Hand of Ragnaros", zeroSellIn, quality);
-        Item sulfurasHasNegativeSellIn = new Item("Sulfuras, Hand of Ragnaros", negativeSellIn, quality);
+        Item sulfurasHasPositiveSellIn = new Item(SULFURAS.getName(), positiveSellIn, quality);
+        Item sulfurasHasZeroSellIn = new Item(SULFURAS.getName(), zeroSellIn, quality);
+        Item sulfurasHasNegativeSellIn = new Item(SULFURAS.getName(), negativeSellIn, quality);
         Item[] items = new Item[]{sulfurasHasPositiveSellIn, sulfurasHasZeroSellIn, sulfurasHasNegativeSellIn};
         GildedRose app = new GildedRose(items);
 
@@ -117,8 +118,8 @@ class GildedRoseTest {
         int sellIn = 12;
         int quality = 27;
         Item[] items = new Item[]{
-            new Item("Backstage passes to a TAFKAL80ETC concert", sellIn, quality),
-            new Item("Backstage passes to a TAFKAL80ETC concert", sellIn, 28)
+            new Item(BACKSTAGE_PASSES.getName(), sellIn, quality),
+            new Item(BACKSTAGE_PASSES.getName(), sellIn, 28)
         };
         GildedRose app = new GildedRose(items);
 
