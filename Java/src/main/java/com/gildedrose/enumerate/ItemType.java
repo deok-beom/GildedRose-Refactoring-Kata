@@ -5,7 +5,7 @@ public enum ItemType {
     SULFURAS("Sulfuras, Hand of Ragnaros"),
     BACKSTAGE_PASSES("Backstage passes to a TAFKAL80ETC concert");
 
-    private final String name;
+    public final String name;
 
     ItemType(String name) {
         this.name = name;
