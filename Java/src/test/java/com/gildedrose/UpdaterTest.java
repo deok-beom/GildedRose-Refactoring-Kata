@@ -3,13 +3,14 @@ package com.gildedrose;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.gildedrose.enumerate.ItemType.AGED_BRIE;
+import static com.gildedrose.enumerate.ItemType.*;
+import static com.gildedrose.enumerate.ItemType.BACKSTAGE_PASSES;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UpdaterTest {
 
     @Test
-    @DisplayName("update_normal_item")
+    @DisplayName("Update_normal_item")
     void 업데이트_일반_아이템() {
         // Given
         int sellIn = 7;
@@ -44,7 +45,7 @@ class UpdaterTest {
     }
 
     @Test
-    @DisplayName("update_aged_brie")
+    @DisplayName("Update_aged_brie")
     void 업데이트_오래된_브리치즈() {
         // Given
         int sellIn = 2;
@@ -76,5 +77,102 @@ class UpdaterTest {
         Updater.update(item);
         assertEquals(--sellIn, item.sellIn);
         assertEquals(quality, item.quality);
+    }
+
+    @Test
+    @DisplayName("Update_Sulfuras")
+    void 설퍼라스_퀄리티_업데이트() {
+        // Given
+        int positiveSellIn = 2;
+        int zeroSellIn = 0;
+        int negativeSellIn = -1;
+        int quality = 45;
+
+        Item sulfurasHasPositiveSellIn = new Item(SULFURAS.getName(), positiveSellIn, quality);
+        Item sulfurasHasZeroSellIn = new Item(SULFURAS.getName(), zeroSellIn, quality);
+        Item sulfurasHasNegativeSellIn = new Item(SULFURAS.getName(), negativeSellIn, quality);
+
+        // When
+        Updater.update(sulfurasHasPositiveSellIn);
+        Updater.update(sulfurasHasZeroSellIn);
+        Updater.update(sulfurasHasNegativeSellIn);
+
+        // Sulfuras has positive sellIn Then
+        assertEquals(positiveSellIn, sulfurasHasPositiveSellIn.sellIn);
+        assertEquals(quality, sulfurasHasPositiveSellIn.quality);
+
+        // Sulfuras has zero sellIn Then
+        assertEquals(zeroSellIn, sulfurasHasZeroSellIn.sellIn);
+        assertEquals(quality, sulfurasHasZeroSellIn.quality);
+
+        // Sulfuras has negative sellIn Then
+        assertEquals(negativeSellIn, sulfurasHasNegativeSellIn.sellIn);
+        assertEquals(quality, sulfurasHasNegativeSellIn.quality);
+    }
+
+    @Test
+    @DisplayName("Update_Backstage_passes")
+    void 백스테이지_입장권_퀄리티_업데이트() {
+        // Given
+        int sellIn = 12;
+        int quality = 27;
+        Item pass48 = new Item(BACKSTAGE_PASSES.getName(), sellIn, quality);
+        Item pass49 = new Item(BACKSTAGE_PASSES.getName(), sellIn, 28);
+
+        // When sellIn > 10 Then
+        while (sellIn > 10) {
+            Updater.update(pass48);
+            Updater.update(pass49);
+            assertEquals(--sellIn, pass48.sellIn);
+            assertEquals(++quality, pass48.quality);
+        }
+
+        // When 5 < sellIn < 10 Then
+        while (sellIn > 5) {
+            Updater.update(pass48);
+            Updater.update(pass49);
+            assertEquals(--sellIn, pass48.sellIn);
+            quality = quality + 2;
+            assertEquals(quality, pass48.quality);
+        }
+
+        // When 0 < sellIn < 5 Then
+        while (sellIn > 2) {
+            Updater.update(pass48);
+            Updater.update(pass49);
+            assertEquals(--sellIn, pass48.sellIn);
+            quality = quality + 3;
+            assertEquals(quality, pass48.quality);
+        }
+
+        // and quality = 48, 49 Then
+        quality = 50;
+        Updater.update(pass48);
+        Updater.update(pass49);
+        assertEquals(--sellIn, pass48.sellIn);
+        assertEquals(quality, pass48.quality);
+        assertEquals(quality, pass49.quality);
+
+        // and quality = 50 Then
+        Updater.update(pass48);
+        Updater.update(pass49);
+        assertEquals(--sellIn, pass48.sellIn);
+        assertEquals(quality, pass48.quality);
+        assertEquals(quality, pass49.quality);
+
+        // When sellIn = 0
+        quality = 0;
+        Updater.update(pass48);
+        Updater.update(pass49);
+        assertEquals(--sellIn, pass48.sellIn);
+        assertEquals(quality, pass48.quality);
+        assertEquals(quality, pass49.quality);
+
+        // When sellIn < 0
+        Updater.update(pass48);
+        Updater.update(pass49);
+        assertEquals(--sellIn, pass48.sellIn);
+        assertEquals(quality, pass48.quality);
+        assertEquals(quality, pass49.quality);
     }
 }

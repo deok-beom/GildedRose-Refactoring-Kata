@@ -14,6 +14,11 @@ public class Updater {
             return;
         }
 
+        if (item.name.equals(BACKSTAGE_PASSES.getName())) {
+            updateBackstagePasses(item);
+            return;
+        }
+
         updateNormalItem(item);
     }
 
@@ -43,5 +48,22 @@ public class Updater {
         if (item.sellIn < 0 && item.quality < 50) {
             ++item.quality;
         }
+    }
+
+    private static void updateBackstagePasses(Item item) {
+        --item.sellIn;
+        int increase;
+
+        if (item.sellIn >= 10) {
+            increase = 1;
+        } else if (item.sellIn >= 5) {
+            increase = 2;
+        } else if (item.sellIn >= 0) {
+            increase = 3;
+        } else {
+            increase = -item.quality;
+        }
+
+        item.quality = Math.min(item.quality + increase, 50);
     }
 }
