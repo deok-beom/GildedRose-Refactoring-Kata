@@ -3,10 +3,12 @@ package com.gildedrose;
 import static com.gildedrose.enumerate.ItemType.*;
 
 public class Updater {
+    public static int DELTA = 1;
 
     public static void update(Item item) {
+        int delta = DELTA;
         if (item.name.equals(AGED_BRIE.getName())) {
-            updateAgedBrie(item);
+            updateAgedBrie(item, delta);
             return;
         }
 
@@ -19,35 +21,25 @@ public class Updater {
             return;
         }
 
-        updateNormalItem(item);
-    }
-
-    private static void updateNormalItem(Item item) {
-        --item.sellIn;
-
-        if (item.quality <= 0) {
-            return;
+        if (item.name.startsWith(CONJURED.getName())) {
+            delta *= 2;
         }
 
-        --item.quality;
-
-        if (item.sellIn < 0 && item.quality > 0) {
-            --item.quality;
-        }
+        updateItem(item, delta);
     }
 
-    private static void updateAgedBrie(Item item) {
+    private static void updateAgedBrie(Item item, int increase) {
         --item.sellIn;
 
         if (item.quality >= 50) {
             return;
         }
 
-        ++item.quality;
-
-        if (item.sellIn < 0 && item.quality < 50) {
-            ++item.quality;
+        if (item.sellIn < 0) {
+            increase *= 2;
         }
+
+        item.quality = Math.min(item.quality + increase, 50);
     }
 
     private static void updateBackstagePasses(Item item) {
@@ -65,5 +57,19 @@ public class Updater {
         }
 
         item.quality = Math.min(item.quality + increase, 50);
+    }
+
+    private static void updateItem(Item item, int decrease) {
+        --item.sellIn;
+
+        if (item.quality <= 0) {
+            return;
+        }
+
+        if (item.sellIn < 0) {
+            decrease *= 2;
+        }
+
+        item.quality = Math.max(item.quality - decrease, 0);
     }
 }

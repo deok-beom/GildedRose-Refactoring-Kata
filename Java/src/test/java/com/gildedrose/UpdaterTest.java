@@ -15,19 +15,22 @@ class UpdaterTest {
         // Given
         int sellIn = 7;
         int quality = 15;
+        int decrease = Updater.DELTA;
         Item item = new Item("+5 Dexterity Vest", sellIn, quality);
 
         // When sellIn > 0, Then
         while (sellIn > 0) {
             Updater.update(item);
+            quality -= decrease;
             assertEquals(--sellIn, item.sellIn);
-            assertEquals(--quality, item.quality);
+            assertEquals(quality, item.quality);
         }
 
+        decrease *= 2;
         // When sellIn <= 0, Then
         while (quality > 1) {
             Updater.update(item);
-            quality = quality - 2;
+            quality -= decrease;
             assertEquals(--sellIn, item.sellIn);
             assertEquals(quality, item.quality);
         }
@@ -174,5 +177,43 @@ class UpdaterTest {
         assertEquals(--sellIn, pass48.sellIn);
         assertEquals(quality, pass48.quality);
         assertEquals(quality, pass49.quality);
+    }
+
+    @Test
+    @DisplayName("Update_conjured_item")
+    void 업데이트_마법_아이템() {
+        // Given
+        int sellIn = 7;
+        int quality = 31;
+        int decrease = Updater.DELTA * 2;
+        Item item = new Item("Conjured Mana Cake", sellIn, quality);
+
+        // When sellIn > 0, Then
+        while (sellIn > 0) {
+            Updater.update(item);
+            quality -= decrease;
+            assertEquals(--sellIn, item.sellIn);
+            assertEquals(quality, item.quality);
+        }
+
+        decrease *= 2;
+        // When sellIn <= 0, Then
+        while (quality > 1) {
+            Updater.update(item);
+            quality -= decrease;
+            assertEquals(--sellIn, item.sellIn);
+            assertEquals(quality, item.quality);
+        }
+
+        // When quality 1, Then
+        quality = 0;
+        Updater.update(item);
+        assertEquals(--sellIn, item.sellIn);
+        assertEquals(quality, item.quality);
+
+        // When quality 0, Then
+        Updater.update(item);
+        assertEquals(--sellIn, item.sellIn);
+        assertEquals(quality, item.quality);
     }
 }

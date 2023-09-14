@@ -14,20 +14,23 @@ class GildedRoseTest {
         // Given
         int sellIn = 7;
         int quality = 15;
+        int decrease = Updater.DELTA;
         Item[] items = new Item[]{new Item("+5 Dexterity Vest", sellIn, quality)};
         GildedRose app = new GildedRose(items);
 
         // When sellIn > 0, Then
         while (sellIn > 0) {
             app.updateQuality();
+            quality -= decrease;
             assertEquals(--sellIn, app.items[0].sellIn);
-            assertEquals(--quality, app.items[0].quality);
+            assertEquals(quality, app.items[0].quality);
         }
 
+        decrease *= 2;
         // When sellIn <= 0, Then
         while (quality > 1) {
             app.updateQuality();
-            quality = quality - 2;
+            quality -= decrease;
             assertEquals(--sellIn, app.items[0].sellIn);
             assertEquals(quality, app.items[0].quality);
         }
@@ -173,4 +176,42 @@ class GildedRoseTest {
         assertEquals(quality, app.items[1].quality);
     }
 
+    @Test
+    @DisplayName("Update_quality_for_conjured_item")
+    void 마법_아이템_퀄리티_업데이트() {
+        // Given
+        int sellIn = 7;
+        int quality = 31;
+        int decrease = Updater.DELTA * 2;
+        Item[] items = new Item[]{new Item("Conjured Mana Cake", sellIn, quality)};
+        GildedRose app = new GildedRose(items);
+
+        // When sellIn > 0, Then
+        while (sellIn > 0) {
+            app.updateQuality();
+            quality -= decrease;
+            assertEquals(--sellIn, app.items[0].sellIn);
+            assertEquals(quality, app.items[0].quality);
+        }
+
+        decrease *= 2;
+        // When sellIn <= 0, Then
+        while (quality > 1) {
+            app.updateQuality();
+            quality -= decrease;
+            assertEquals(--sellIn, app.items[0].sellIn);
+            assertEquals(quality, app.items[0].quality);
+        }
+
+        // When quality 1, Then
+        quality = 0;
+        app.updateQuality();
+        assertEquals(--sellIn, app.items[0].sellIn);
+        assertEquals(quality, app.items[0].quality);
+
+        // When quality 0, Then
+        app.updateQuality();
+        assertEquals(--sellIn, app.items[0].sellIn);
+        assertEquals(quality, app.items[0].quality);
+    }
 }
